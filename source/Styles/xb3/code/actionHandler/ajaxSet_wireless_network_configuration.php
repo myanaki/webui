@@ -389,6 +389,11 @@ else
 							array_splice($ft, $k, 1);
 						}
 					}
+					// Refresh $old_id after deletions: the CCSP framework re-indexes surviving
+					// entries immediately after a DelEntry, so the original snapshot is stale.
+					// Without this refresh, array_diff below returns empty for middle-row
+					// deletions, causing addTblObj entries to never get a MAC assigned.
+					$old_id = array_filter(explode(",",getInstanceIds("Device.WiFi.AccessPoint.$i.X_CISCO_COM_MacFilterTable.")));
 					//add enough new instance, but we can't tell which ID is added!!!
 					for ($j=0; $j<count($ft); $j++)
 					{
