@@ -427,6 +427,10 @@ else
 					$ft		= $ft_config_filtered;}
 					//get all old table instance
 					$old_id = array_filter(explode(",",getInstanceIds("Device.WiFi.AccessPoint."+$i+".X_CISCO_COM_MacFilterTable.")));
+					// Delete highest instance IDs first so that surviving entries with lower IDs
+					// keep their instance numbers unchanged. Without this, after deleting inst1
+					// CCSP re-enumerates (inst3->inst2) and delTblObj("...3.") returns error 9005.
+					$old_id.sort(function(a,b){return parseInt(b,10)-parseInt(a,10);});
 					//for old table, delete which is not in new table, keep in place which is in it
 					for(var $keytmp in $old_id) { $j=$old_id[$keytmp];/*p2j-foreach*/
 						$del_mac = true;
